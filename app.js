@@ -5,27 +5,34 @@ function printMessage(username, badgeCount, points) {
   console.log(message);
 }
 function getProfile(username) {
-  // Connect to the API URL (https://teamtreehouse.com/profiles/csalgado.json)
-  const request = https.get(
-    `https://teamtreehouse.com/profiles/${username}.json`,
-    (response) => {
-      let body = '';
-      // Read the data
-      response.on('data', (data) => {
-        body += data.toString();
-      });
-      response.on('end', () => {
-        // Parse the data
-        let profile = JSON.parse(body);
+  try {
+    // Connect to the API URL (https://teamtreehouse.com/profiles/csalgado.json)
+    const request = https.get(
+      `https://teamtreehouse.com/profiles/${username}.json`,
+      (response) => {
+        let body = '';
+        // Read the data
+        response.on('data', (data) => {
+          body += data.toString();
+        });
+        response.on('end', () => {
+          // Parse the data
+          let profile = JSON.parse(body);
 
-        printMessage(
-          username,
-          profile.badges.length,
-          profile.points.JavaScript
-        );
-      });
-    }
-  );
+          printMessage(
+            username,
+            profile.badges.length,
+            profile.points.JavaScript
+          );
+        });
+      }
+    );
+    request.on('error', (error) =>
+      console.error('The requested address was not found')
+    );
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 const users = process.argv.slice(2);
 users.forEach(getProfile);
