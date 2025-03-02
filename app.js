@@ -4,9 +4,13 @@ function getProfile() {
   const request = https.get(
     'https://teamtreehouse.com/profiles/brihalterman.json',
     (response) => {
+      let body = '';
       console.dir(response.statusCode);
       response.on('data', (data) => {
-        console.dir(data);
+        body += data.toString();
+      });
+      response.on('end', () => {
+        console.dir(JSON.parse(body));
       });
     }
   );
