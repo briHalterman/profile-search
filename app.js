@@ -4,6 +4,7 @@ function printMessage(username, badgeCount, points) {
   const message = `${username} has ${badgeCount} total badge(s) and ${points} points in JavaScript`;
   console.log(message);
 }
+
 function getProfile(username) {
   try {
     // Connect to the API URL (https://teamtreehouse.com/profiles/csalgado.json)
@@ -16,14 +17,18 @@ function getProfile(username) {
           body += data.toString();
         });
         response.on('end', () => {
-          // Parse the data
-          let profile = JSON.parse(body);
+          try {
+            // Parse the data
+            let profile = JSON.parse(body);
 
-          printMessage(
-            username,
-            profile.badges.length,
-            profile.points.JavaScript
-          );
+            printMessage(
+              username,
+              profile.badges.length,
+              profile.points.JavaScript
+            );
+          } catch (error) {
+            console.error(error.message);
+          }
         });
       }
     );
