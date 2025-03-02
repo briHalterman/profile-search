@@ -1,21 +1,31 @@
 const https = require('https');
-function getProfile() {
+// Print the data
+function printMessage(username, badgeCount, points) {
+  const message = `${username} has ${badgeCount} total badge(s) and ${points} points in JavaScript`;
+  console.log(message);
+}
+function getProfile(username) {
   // Connect to the API URL (https://teamtreehouse.com/profiles/csalgado.json)
   const request = https.get(
-    'https://teamtreehouse.com/profiles/brihalterman.json',
+    `https://teamtreehouse.com/profiles/${username}.json`,
     (response) => {
       let body = '';
-      console.dir(response.statusCode);
+      // Read the data
       response.on('data', (data) => {
         body += data.toString();
       });
       response.on('end', () => {
-        console.dir(JSON.parse(body));
+        // Parse the data
+        let profile = JSON.parse(body);
+
+        printMessage(
+          username,
+          profile.badges.length,
+          profile.points.JavaScript
+        );
       });
     }
   );
-  // Read the data
-  // Parse the data
-  // Print the data
 }
-getProfile();
+const users = process.argv.slice(2);
+users.forEach(getProfile);
